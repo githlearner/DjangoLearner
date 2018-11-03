@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+    <title>CurrentHO</title>
+</head>
+<body>
+<style>
+
+    .myTable td{
+        padding:10px!important;
+    }
+    .approve {
+        color: yellow;
+    }
+    .completed {
+        color: Green;
+    }
+    .blocked {
+        color: Red;
+    }
+
+
+</style>
+<div >
+    <div>
+        <div style="float:left;width:20%">
+        <h1>Current HO</h1>
+    </div>
+        <div style="float:right;">
+        <div class="cleanslate w24tz-current-time w24tz-middle" style="display: inline-block !important; visibility: hidden !important; min-width:100px !important; min-height:5px !important;"><p><a href="//24timezones.com/world_directory/time_in_paris.php" style="text-decoration: none" class="clock24" id="tz24-1531057267-c1195-eyJob3VydHlwZSI6MTIsInNob3dkYXRlIjoiMSIsInNob3dzZWNvbmRzIjoiMSIsImNvbnRhaW5lcl9pZCI6ImNsb2NrX2Jsb2NrX2NiNWI0MjE0NzMxNDFiZCIsInR5cGUiOiJkYiIsImxhbmciOiJlbiJ9" title="Paris local time" target="_blank" rel="nofollow">Paris time</a></p><div id="clock_block_cb5b421473141bd"></div></div>
+        <script type="text/javascript" src="//w.24timezones.com/l.js" async></script>
+    </div>
+    </div>
+
+    </br>
+    </br>
+    {%csrf_token%}
+    <div>
+        <table id="myTable" class="table table-hover myTable">
+    <thead>
+        <tr>
+            <th>Issue Type</th>
+            <th>Updated By</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Subject</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for query in form %}
+        <tr>
+            <td>{{query.issue_type}}</td>
+            <td>{{query.updated_by}}</td>
+            <td>{{query.start_date}}</td>
+            <td>{{query.end_date}}</td>
+            <td>{{query.subject}}</td>
+            <td>{{query.status}}</td>
+            <td><button class="btn btn-success" data-toggle="modal" data-target="#myModal" contenteditable="false">Edit</button>
+                <button class="btn btn-success" data-toggle="modal" data-target="#myDeleteModal" contenteditable="false">Delete</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    </div>
+
+<!-----  My Edit Modal Start --->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"> <span aria-hidden="true" class="">×   </span><span class="sr-only">Close</span>
+
+                </button>
+                 <h4 class="modal-title" id="myModalLabel">Edit Record</h4>
+
+            </div>
+            <div class="modal-body">
+                <form>
+
+
+                </form>
+
+                {% for query in form %}
+        <ul>
+            <li>{{query.issue_type}}</li>
+            <li>{{query.updated_by}}</li>
+            <li>{{query.start_date}}</li>
+            <li>{{query.end_date}}</li>
+            <li>{{query.subject}}</li>
+            <li>{{query.status}}</li>
+
+        </ul>
+        {% endfor %}
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-----  My Edit Modal End --->
+
+    <!-----  My Delete Modal Start --->
+
+    <div class="modal fade" id="myDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"> <span aria-hidden="true" class="">×   </span><span class="sr-only">Close</span>
+                </button>
+
+            </div>
+            <div class="modal-body"> Are you sure to delete this record from Database</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-----  My Edit Modal End --->
+
+</div>
+<script>
+    $(document).ready( function () {
+        $('#myTable').DataTable({
+            "paging":   false,
+           // "ordering": false,
+            "info":     false,
+             dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf',
+            ],
+            "createdRow": function ( row, data, index ) {
+                console.log( 'row' + row + 'data' +data +index );
+                if ( data[5] !=null ) {
+                    var className = '';
+                    switch ( data[5]){
+                        case 'Approved' : className= 'approve';break;
+                        case 'Completed' : className= 'completed';break;
+                        case 'Blocked' : className= 'blocked';break;
+                    }
+                    console.log($('td', row))
+
+                    $('td', row).eq(5).addClass(className);
+                }
+            }
+        });
+
+
+    });
+
+</script>
+</body>
+</html>
